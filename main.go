@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/gemm123/crowdfunding/auth"
 	"github.com/gemm123/crowdfunding/handler"
 	"github.com/gemm123/crowdfunding/user"
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,8 @@ func main() {
 
 	userRepositoy := user.NewRepository(db)
 	userService := user.NewService(userRepositoy)
-	userHandler := handler.NewUserHandler(userService)
+	authService := auth.NewService()
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 
