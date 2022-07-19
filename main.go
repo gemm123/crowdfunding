@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gemm123/crowdfunding/auth"
+	"github.com/gemm123/crowdfunding/campaign"
 	"github.com/gemm123/crowdfunding/handler"
 	"github.com/gemm123/crowdfunding/helper"
 	"github.com/gemm123/crowdfunding/user"
@@ -23,9 +24,14 @@ func main() {
 	}
 
 	userRepositoy := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+
 	userService := user.NewService(userRepositoy)
+	campaignService := campaign.NewService(campaignRepository)
+
 	authService := auth.NewService()
 	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHandler(campaignService)
 
 	router := gin.Default()
 
@@ -35,6 +41,8 @@ func main() {
 	api.POST("/sessions", userHandler.Login)
 	api.POST("/email_checkers", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+
+	api.GET("/campaigns", campaignHandler.GetCampaigns)
 
 	router.Run()
 }
