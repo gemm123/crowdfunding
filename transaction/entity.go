@@ -3,6 +3,7 @@ package transaction
 import (
 	"time"
 
+	"github.com/gemm123/crowdfunding/campaign"
 	"github.com/gemm123/crowdfunding/user"
 )
 
@@ -14,6 +15,7 @@ type Transaction struct {
 	Status     string
 	Code       string
 	User       user.User
+	Campaign   campaign.Campaign
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
