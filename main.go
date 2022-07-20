@@ -9,6 +9,7 @@ import (
 	"github.com/gemm123/crowdfunding/campaign"
 	"github.com/gemm123/crowdfunding/handler"
 	"github.com/gemm123/crowdfunding/helper"
+	"github.com/gemm123/crowdfunding/payment"
 	"github.com/gemm123/crowdfunding/transaction"
 	"github.com/gemm123/crowdfunding/user"
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,8 @@ func main() {
 
 	userService := user.NewService(userRepositoy)
 	campaignService := campaign.NewService(campaignRepository)
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
+	paymentService := payment.NewService()
+	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 	authService := auth.NewService()
 
 	userHandler := handler.NewUserHandler(userService, authService)
@@ -55,6 +57,7 @@ func main() {
 
 	api.GET("/campaigns/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransactions)
 	api.GET("/transactions", authMiddleware(authService, userService), transactionHandler.GetUserTransactions)
+	api.POST("/transactions", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
 
 	router.Run()
 }
