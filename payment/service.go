@@ -8,7 +8,8 @@ import (
 	"github.com/midtrans/midtrans-go/snap"
 )
 
-type service struct{}
+type service struct {
+}
 
 type Service interface {
 	GetPaymentURL(transaction Transaction, user user.User) (string, error)
